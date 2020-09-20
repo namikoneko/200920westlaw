@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<div id="app">
+<input type="text" v-model="mytext">
+<button v-on:click="mychange">変換</button>
+<div id="copy">
+<p v-html="mystr">
+</p>
+</div>
+<button v-on:click="myEvent">copy</button>
+
+<script>
+var app = new Vue({
+el: "#app",
+data: {
+mytext: "",
+mystr: ""
+},
+methods: {
+mychange: function(){
+//alert(this.mytext);
+var reiwa = this.mytext.indexOf("令和");
+var heisei = this.mytext.indexOf("平成");
+var showa = this.mytext.indexOf("昭和");
+var taisho = this.mytext.indexOf("大正");
+var meiji = this.mytext.indexOf("大正");
+var nengo_num = 0;
+
+if(reiwa > 0){
+//alert("reiwa");
+var nengo_value = 236;
+var nengo_option= 0;
+nengo_num = reiwa;
+}else if(heisei > 0){
+var nengo_value = 235;
+var nengo_option= 1;
+nengo_num = heisei;
+}else if(showa > 0){
+var nengo_value = 234;
+var nengo_option= 2;
+nengo_num = showa;
+}else if(taisho > 0){
+var nengo_value = 233;
+var nengo_option= 3;
+nengo_num = taisho;
+}else if(meiji > 0){
+var nengo_value = 232;
+var nengo_option= 4;
+nengo_num = meiji;
+}else{
+alert("年号ヒットなし");
+}
+
+var nenn = this.mytext.indexOf("年");
+var tuki = this.mytext.indexOf("月");
+var niti = this.mytext.indexOf("日");
+
+//alert(nengo_num);
+var J = this.mytext.slice(0, nengo_num);
+var Y = this.mytext.slice(nengo_num+2, nenn);
+var M = this.mytext.slice(nenn+1, tuki);
+var D = this.mytext.slice(tuki+1, niti);
+/*
+alert(J);
+alert(Y);
+alert(M);
+alert(D);
+*/
+var halfY = Y.replace(/[０-９]/g, function(s) { return String.fromCharCode(s.charCodeAt(0) - 65248) });
+var halfM = M.replace(/[０-９]/g, function(s) { return String.fromCharCode(s.charCodeAt(0) - 65248) });
+var halfD = D.replace(/[０-９]/g, function(s) { return String.fromCharCode(s.charCodeAt(0) - 65248) });
+
+this.mystr = "document.getElementById('ddlJudEra').options[" + nengo_option + "].selected=true;" + "document.getElementById('ddlJudYear_flexselect').value = " + halfY + ";" + "document.getElementById('ddlJudMonth_flexselect').value = " + halfM + ";" + "document.getElementById('ddlJudDay_flexselect').value = " + halfD + ";";
+
+//alert(hankakuY);
+
+},//function
+
+myEvent: function(){
+    let range = document.createRange();
+    let span = document.getElementById('copy');
+    range.selectNodeContents(span);
+
+    let selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    document.execCommand('copy');
+}// myEvent
+
+}//methods
+}
+)
+</script>
+</div>
+</body>
+</html>
